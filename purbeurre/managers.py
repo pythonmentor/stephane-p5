@@ -1,10 +1,12 @@
 """All MySQL requests needed by catalog"""
-from database import cnx
+from purbeurre.database import cnx
 
 
 class ProductManager:
+    """Docstring."""
 
     def __init__(self):
+        """Docstring."""
         self.list_categories = list()
         self.list_products_category = list()
         self.list_products = list()

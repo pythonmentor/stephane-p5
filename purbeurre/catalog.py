@@ -1,22 +1,29 @@
-from managers import ProductManager
+"""Docstring."""
+
 from termcolor import colored
 import colorama
+
+from .managers import ProductManager
 
 colorama.init()
 
 
 class TheMenu:
+    """Docstring."""
 
     def __init__(self):
+        """Docstring."""
         self.next = self.accueil
         self.prod_manage = ProductManager()
 
     def start(self):
+        """Docstring."""
         self.running = True
         while self.running:
             self.next = self.next()
 
     def accueil(self):
+        """Docstring."""
         #Start menu
         print(
             colored("Accueil\n", 'yellow') +
@@ -38,6 +45,7 @@ class TheMenu:
             return self.accueil
 
     def product_replace(self):
+        """Docstring."""
         print(
             colored("Vous souhaitez remplacer un aliment.\n", 'yellow') +
             colored("1", 'red') +
@@ -54,6 +62,7 @@ class TheMenu:
             return self.product_replace
 
     def display_categories(self):
+        """Docstring."""
         """Here we use 'zip' ton organize the display of the results
         in 8 columns"""
         enumerated_categories = []
@@ -104,6 +113,7 @@ class TheMenu:
                 return self.display_categories
 
     def display_subcategories(self):
+        """Docstring."""
         # find the category name from the number answered
         quest = self.prod_manage.classify_categories()[(
             self.last_category_number-1
@@ -141,6 +151,7 @@ class TheMenu:
                 return self.display_subcategories
 
     def products_from_selected_subcategory(self):
+        """Docstring."""
         # sort the product name from the answer
         quest = self.prod_manage.list_subcategories[(
             self.last_sub_category_number-1
@@ -214,6 +225,7 @@ class TheMenu:
             return self.products_from_selected_subcategory
 
     def product_substitution(self):
+        """Docstring."""
         # Find the product bar-code from the list 'list_producs_category'
         old_product_bar_code = self.prod_manage.list_products_category[(
             self.last_product_to_substitute-1
@@ -273,6 +285,7 @@ class TheMenu:
             return self.product_substitution
 
     def save_product(self):
+        """Docstring."""
         new_product = self.prod_manage.list_prod_cat_bar[(
             self.last_answer-1
         )][1]
@@ -328,6 +341,7 @@ class TheMenu:
         return self.accueil
 
     def stored_product(self):
+        """Docstring."""
         print("Voici la liste de vos produits de substitution :\n")
         self.prod_manage.list_stored_product()
         save_product = self.prod_manage.list_saved_product
@@ -364,6 +378,7 @@ class TheMenu:
             return self.stored_product
 
     def products(self):
+        """Docstring."""
         self.prod_manage.get_all_products()
         for product in self.prod_manage.list_products:
             print(
@@ -383,12 +398,3 @@ class TheMenu:
     def quit(self):
         print("Menu Quitter, au revoir !")
         self.running = False
-
-
-def main():
-    test = TheMenu()
-    test.start()
-
-
-if __name__ == "__main__":
-    main()
