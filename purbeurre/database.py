@@ -10,5 +10,5 @@ cnx = mysql.connector.connect(
     password=config.PASSWORD,
     host=config.HOST,
     database=config.DATABASE,
-    charset=config.CHARSET
+    charset=config.CHARSET,
 )

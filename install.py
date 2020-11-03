@@ -23,7 +23,7 @@ def main():
             "sort_by": "unique_scan_n",
             "page_size": page_size,
             "page": page_number,
-            "json": True
+            "json": True,
         }
         res = requests.get(url, params=payload)
         results = res.json()
@@ -35,16 +35,18 @@ def main():
 
     """Filling the database."""
     for i, product in enumerate(products):
-        """Verification of the existence of nutriscore and generic_name_fr.
-        If exist it is put in the database else it is removed.
-        Verification if the string xF0x9fx8dx9e exist in de product name (
-        it is problematic form MySQL) """
-        if ('nutrition_grades' in product
-                and 'generic_name_fr' in product and
-                b"\xF0\x9f\x8d\x9e" not in product['product_name_fr'].encode()):
+        # Verification of the existence of nutriscore and generic_name_fr.
+        # If exist it is put in the database else it is removed.
+        # Verification if the string xF0x9fx8dx9e exist in de product name (
+        # it is problematic form MySQL) """
+        if (
+            "nutrition_grades" in product
+            and "generic_name_fr" in product
+            and b"\xF0\x9f\x8d\x9e" not in product["product_name_fr"].encode()
+        ):
             # if generic_name_fr is more than 200 characters it is truncated
-            if len(product['generic_name_fr']) > 200:
-                product['generic_name_fr'] = product['generic_name_fr'][:199]
+            if len(product["generic_name_fr"]) > 200:
+                product["generic_name_fr"] = product["generic_name_fr"][:199]
             cursor.execute(
                 """
                 INSERT INTO
@@ -54,19 +56,23 @@ def main():
                         %(nutrition_grades)s
                     )
                 ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)
-                """, {
-                    "nutrition_grades": product['nutrition_grades']
-                }
+                """,
+                {"nutrition_grades": product["nutrition_grades"]},
             )
             cnx.commit()
 
             """Product table filling (nutriscore ok)"""
-            print(f"Traitement du produit n°{i}",
-                "code :", product['code'],
-                "nom :", product['product_name_fr'],
-                "description", product['generic_name_fr'],
-                "nutriscore :", product['nutrition_grades']
-                )
+            print(
+                f"Traitement du produit n°{i}",
+                "code :",
+                product["code"],
+                "nom :",
+                product["product_name_fr"],
+                "description",
+                product["generic_name_fr"],
+                "nutriscore :",
+                product["nutrition_grades"],
+            )
             cursor.execute(
                 """
                 INSERT INTO
@@ -84,13 +90,12 @@ def main():
                     )
                 """,
                 {
-                    "bar_code": product['code'],
-                    "name": product['product_name_fr'],
-
-                    "description": product['generic_name_fr'],
-                    "score": product['nutrition_grades'],
-                    "url": product['url']
-                }
+                    "bar_code": product["code"],
+                    "name": product["product_name_fr"],
+                    "description": product["generic_name_fr"],
+                    "score": product["nutrition_grades"],
+                    "url": product["url"],
+                },
             )
             cnx.commit()
         else:
@@ -99,7 +104,7 @@ def main():
             continue  # abort product treatment, go back to for !
 
         """Product stores enumeration"""
-        if 'stores' not in product:
+        if "stores" not in product:
             cursor.execute(
                 """
                 INSERT INTO
@@ -109,13 +114,11 @@ def main():
                         null, %(stores)s
                     )
                 """,
-                {
-                    "stores": 'store_less'
-                }
+                {"stores": "store_less"},
             )
             cnx.commit()
         else:
-            store_list = (product['stores']).split(',')
+            store_list = (product["stores"]).split(",")
             for store in store_list:
                 """Put stores in store table"""
                 cursor.execute(
@@ -128,9 +131,7 @@ def main():
                         )
                     ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)
                     """,
-                    {
-                        "stores": (store.strip()).capitalize()
-                    }
+                    {"stores": (store.strip()).capitalize()},
                 )
                 cnx.commit()
                 """product_store association"""
@@ -148,14 +149,14 @@ def main():
                         )
                     """,
                     {
-                        "code": product['code'],
-                        "store_name": (store.strip()).capitalize()
-                    }
+                        "code": product["code"],
+                        "store_name": (store.strip()).capitalize(),
+                    },
                 )
                 cnx.commit()
 
         """Product categories enumeration"""
-        category_list = (product['categories']).split(',')
+        category_list = (product["categories"]).split(",")
         for category in category_list:
             cursor.execute(
                 """
@@ -166,9 +167,7 @@ def main():
                         null, %(categories)s)
                 ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id)
                 """,
-                {
-                    "categories": (category.strip()).capitalize()
-                }
+                {"categories": (category.strip()).capitalize()},
             )
             cnx.commit()
 
@@ -187,9 +186,9 @@ def main():
                     )
                 """,
                 {
-                    "code": product['code'],
-                    "category_name": (category.strip()).capitalize()
-                }
+                    "code": product["code"],
+                    "category_name": (category.strip()).capitalize(),
+                },
             )
             cnx.commit()
 

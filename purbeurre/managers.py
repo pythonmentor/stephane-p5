@@ -102,10 +102,11 @@ class ProductManager:
         # Put the the query results in a list.
         for result in results:
             # category with the same fourth first caracters are not added
-            item_in = [item
-                       for item in self.list_categories
-                       if result[1][:4] in item[1][:4]
-                       ]
+            item_in = [
+                item
+                for item in self.list_categories
+                if result[1][:4] in item[1][:4]
+            ]
             if item_in != []:
                 continue
             else:
@@ -119,7 +120,7 @@ class ProductManager:
         # Browse the collection in ordered way and put its items in a numerate
         # list
         for i, category in enumerate(
-                sorted(self.set_classified_categories), start=1
+            sorted(self.set_classified_categories), start=1
         ):
             self.list_enumerated_categories.append((i, category))
         return self.list_enumerated_categories
@@ -221,12 +222,7 @@ class ProductManager:
         # of category in common.
         for i, result in enumerate(results, start=1):
             self.list_prod_cat_bar.append(
-                (i,
-                 result[0],
-                 result[1],
-                 result[2],
-                 result[3]
-                 )
+                (i, result[0], result[1], result[2], result[3])
             )
         return self.list_prod_cat_bar
 
@@ -282,10 +278,7 @@ class ProductManager:
                 %(new_product)s
                 )
             """,
-            {
-                "old_product": old_product,
-                "new_product": new_product
-            }
+            {"old_product": old_product, "new_product": new_product},
         )
         cnx.commit()
         print("Produit enregistré !")
@@ -316,7 +309,7 @@ class ProductManager:
             info_product = self.list_description
             original_product_name = info_product[0][0]
             # Check if product description exsists
-            if info_product[0][2] == '':
+            if info_product[0][2] == "":
                 original_product_description = "(sans description)"
             else:
                 original_product_description = info_product[0][2]
@@ -338,7 +331,7 @@ class ProductManager:
                 self.get_product_description(result03[0])
                 info_substitute = self.list_description
                 substitute_product_name = info_substitute[0][0]
-                if info_substitute[0][2] == '':
+                if info_substitute[0][2] == "":
                     substitute_product_description = "(sans description)"
                 else:
                     substitute_product_description = info_substitute[0][2]
@@ -349,19 +342,21 @@ class ProductManager:
                         substitute_product_name,
                         substitute_product_description,
                         substitute_product_score,
-                        substitute_product_url
+                        substitute_product_url,
                     )
                 )
             # Join the original product and its substitutes
-            self.list_saved_product.append((
+            self.list_saved_product.append(
                 (
-                    original_product_name,
-                    original_product_description,
-                    original_product_score,
-                    original_product_url
-                ),
-                list_substitute_product
-            ))
+                    (
+                        original_product_name,
+                        original_product_description,
+                        original_product_score,
+                        original_product_url,
+                    ),
+                    list_substitute_product,
+                )
+            )
 
         return self.list_saved_product
 
